@@ -1,18 +1,23 @@
 import fetch from "node-fetch";
-import { SHOW_HEADER, SHOW_BODY, SHOW_RESPONSE, TARGET_HOST } from "./config.js";
+import {
+  SHOW_HEADER,
+  SHOW_BODY,
+  SHOW_RESPONSE,
+  TARGET_HOST,
+} from "./config.js";
 
 export function errorHandler() {
-    return async (ctx, next) =>  {
-        try {
-            await next();
-          } catch (err) {
-            ctx.status = err.statusCode || err.status || 500;
-            ctx.body = {
-              message: err.message,
-            };
-          }
+  return async (ctx, next) => {
+    try {
+      await next();
+    } catch (err) {
+      ctx.status = err.statusCode || err.status || 500;
+      ctx.body = {
+        message: err.message,
+      };
     }
-  }
+  };
+}
 
 export function mapBody(map) {
   return async (ctx) => {

@@ -1,7 +1,7 @@
 {
   "name": "response-mapper",
   "version": "1.0.0",
-  "description": "",
+  "description": "Modify the http response, no need for http capture and Mithm.",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -11,6 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "@koa/router": "^10.1.1",
+    "ip": "^1.1.5",
     "koa": "^2.13.4",
     "koa-bodyparser": "^4.3.0",
     "node-fetch": "^3.2.3"
