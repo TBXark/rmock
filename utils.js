@@ -1,8 +1,8 @@
 import fetch from "node-fetch";
 import {
-  SHOW_HEADER,
-  SHOW_BODY,
-  SHOW_RESPONSE,
+  SHOW_REQUEST_HEADER,
+  SHOW_REQUEST_BODY,
+  SHOW_RESPONSE_BODY,
   TARGET_HOST,
   PRINT_RESPONSE_JSON_PRETTY,
 } from "./config.js";
@@ -35,11 +35,11 @@ export function mapBody(map) {
     let log = `
 --Request-------------------------------------------------------
 ${ctx.request.method} : ${url.toString()}${
-      SHOW_HEADER ? "\n" + JSON.stringify(ctx.request.headers, null, 2) : ""
-    }${SHOW_BODY ? "\n" + body : ""}
+      SHOW_REQUEST_HEADER ? "\n" + JSON.stringify(ctx.request.headers, null, 2) : ""
+    }${SHOW_REQUEST_BODY ? "\n" + body : ""}
 --Response------------------------------------------------------
 ${
-  SHOW_RESPONSE
+  SHOW_RESPONSE_BODY
     ? responseStringify(resBody)
     : `${res.status}: ${res.statusText}`
 }`;
