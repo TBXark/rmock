@@ -15,8 +15,13 @@ function responseStringify(obj) {
   }
 }
 
-export function mapBody(map) {
+export function disableLog() {
+  return mapBody(null, { canLog: false });
+}
+
+export function mapBody(map, config) {
   return async (ctx) => {
+    const { canLog } = config || { canLog: true };
     const url = ctx.request.URL;
     url.host = TARGET_HOST;
     url.protocol = "https";
@@ -55,7 +60,9 @@ ${responseStringify(resBody)}
       log +=
         "\n--End-----------------------------------------------------------\n";
     }
-    console.log(log);
+    if (canLog) {
+      console.log(log);
+    }
     ctx.status = res.status;
     ctx.statusText = res.statusText;
     ctx.body = resBody;
