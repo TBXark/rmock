@@ -4,7 +4,16 @@ import {
   SHOW_BODY,
   SHOW_RESPONSE,
   TARGET_HOST,
+  PRINT_RESPONSE_JSON_PRETTY,
 } from "./config.js";
+
+function responseStringify(obj) {
+  if (PRINT_RESPONSE_JSON_PRETTY) {
+    return JSON.stringify(obj, null, 2);
+  } else {
+    return JSON.stringify(obj)
+  }
+}
 
 export function mapBody(map) {
   return async (ctx) => {
@@ -31,14 +40,14 @@ ${ctx.request.method} : ${url.toString()}${
 --Response------------------------------------------------------
 ${
   SHOW_RESPONSE
-    ? JSON.stringify(resBody, null, 2)
+    ? responseStringify(resBody)
     : `${res.status}: ${res.statusText}`
 }`;
     if (map) {
       resBody = map(resBody, ctx);
       log += `
 --Map-----------------------------------------------------------      
-${JSON.stringify(resBody, null, 2)}
+${responseStringify(resBody)}
 --End-----------------------------------------------------------   
 
     `;
