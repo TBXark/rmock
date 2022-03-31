@@ -7,13 +7,6 @@ import {
   PRINT_RESPONSE_JSON_PRETTY,
 } from "./config.js";
 
-function responseStringify(obj) {
-  if (PRINT_RESPONSE_JSON_PRETTY) {
-    return JSON.stringify(obj, null, 2);
-  } else {
-    return JSON.stringify(obj)
-  }
-}
 
 export function disableLog() {
   return mapBody(null, { canLog: false });
@@ -21,7 +14,29 @@ export function disableLog() {
 
 export function mapBody(map, config) {
   return async (ctx) => {
-    const { canLog } = config || { canLog: true };
+    const {
+      canLog,
+      showRequestHeader,
+      showRequestBody,
+      showResponseBody,
+      printResponseJsonPretty,
+    } = {
+      canLog: true,
+      showRequestHeader: SHOW_REQUEST_HEADER,
+      showRequestBody: SHOW_REQUEST_BODY,
+      showResponseBody: SHOW_RESPONSE_BODY,
+      printResponseJsonPretty: PRINT_RESPONSE_JSON_PRETTY,
+      ...config,
+    };
+
+    const responseStringify = (obj) => {
+      if (printResponseJsonPretty) {
+        return JSON.stringify(obj, null, 2);
+      } else {
+        return JSON.stringify(obj);
+      }
+    }
+    
     const url = ctx.request.URL;
     url.host = TARGET_HOST;
     url.protocol = "https";
@@ -40,11 +55,13 @@ export function mapBody(map, config) {
     let log = `
 --Request-------------------------------------------------------
 ${ctx.request.method} : ${url.toString()}${
-      SHOW_REQUEST_HEADER ? "\n" + JSON.stringify(ctx.request.headers, null, 2) : ""
-    }${SHOW_REQUEST_BODY ? "\n" + body : ""}
+      showRequestHeader
+        ? "\n" + JSON.stringify(ctx.request.headers, null, 2)
+        : ""
+    }${showRequestBody ? "\n" + body : ""}
 --Response------------------------------------------------------
 ${
-  SHOW_RESPONSE_BODY
+  showResponseBody
     ? responseStringify(resBody)
     : `${res.status}: ${res.statusText}`
 }`;

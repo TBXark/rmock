@@ -6,7 +6,7 @@ export const router = new Router();
 // Add Code Here
 
 // Example
-// 1.disable some api log 
+// 1. disable some api log 
 router.get('/', disableLog())
 // 2. change response body
 router.get( "/users/:name", mapBody((res, ctx) => {
