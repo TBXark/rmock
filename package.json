@@ -1,7 +1,7 @@
 {
   "name": "response-mapper",
   "version": "1.0.0",
-  "description": "Modify the http response, no need for http capture and Mithm.",
+  "description": "Modify the http json response, no need for http capture and MitM.",
   "main": "index.js",
   "type": "module",
   "scripts": {
