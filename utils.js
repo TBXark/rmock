@@ -7,6 +7,12 @@ import {
   PRINT_RESPONSE_JSON_PRETTY,
 } from "./config.js";
 
+import https from "https";
+
+const httpsAgent = new https.Agent({
+  keepAlive: true
+});
+
 
 const defaultMapBodyConfig = {
   canLog: true,
@@ -53,6 +59,7 @@ export function mapBody(map, config) {
         host: url.host,
       },
       body,
+      agent: httpsAgent,
     });
     let resBody = await res.json();
     let log = `
