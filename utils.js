@@ -6,19 +6,6 @@ import {
   TARGET_HOST,
 } from "./config.js";
 
-export function errorHandler() {
-  return async (ctx, next) => {
-    try {
-      await next();
-    } catch (err) {
-      ctx.status = err.statusCode || err.status || 500;
-      ctx.body = {
-        message: err.message,
-      };
-    }
-  };
-}
-
 export function mapBody(map) {
   return async (ctx) => {
     const url = ctx.request.URL;
