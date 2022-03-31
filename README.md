@@ -1,6 +1,6 @@
 # response-mapper
 
-Modify the http response (only json is supported), no need for http capture and Mithm.
+Modify the http json response, no need for http capture and MitM.
 
 ### Example
 
