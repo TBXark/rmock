@@ -31,7 +31,7 @@ ${ctx.request.method} : ${url.toString()}${
 --Response------------------------------------------------------
 ${
   SHOW_RESPONSE
-    ? JSON.stringify(res, null, 2)
+    ? JSON.stringify(resBody, null, 2)
     : `${res.status}: ${res.statusText}`
 }`;
     if (map) {
