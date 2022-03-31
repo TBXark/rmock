@@ -8,6 +8,14 @@ import {
 } from "./config.js";
 
 
+const defaultMapBodyConfig = {
+  canLog: true,
+  showRequestHeader: SHOW_REQUEST_HEADER,
+  showRequestBody: SHOW_REQUEST_BODY,
+  showResponseBody: SHOW_RESPONSE_BODY,
+  printResponseJsonPretty: PRINT_RESPONSE_JSON_PRETTY,
+}
+
 export function disableLog() {
   return mapBody(null, { canLog: false });
 }
@@ -21,14 +29,9 @@ export function mapBody(map, config) {
       showResponseBody,
       printResponseJsonPretty,
     } = {
-      canLog: true,
-      showRequestHeader: SHOW_REQUEST_HEADER,
-      showRequestBody: SHOW_REQUEST_BODY,
-      showResponseBody: SHOW_RESPONSE_BODY,
-      printResponseJsonPretty: PRINT_RESPONSE_JSON_PRETTY,
+      ...defaultMapBodyConfig,
       ...config,
     };
-
     const responseStringify = (obj) => {
       if (printResponseJsonPretty) {
         return JSON.stringify(obj, null, 2);
