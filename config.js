@@ -20,4 +20,4 @@ export const TARGET_IS_HTTPS = target?.protocol ? target.protocol.startsWith("ht
 // 目标端口
 export const TARGET_PORT = target.port || (TARGET_IS_HTTPS ? 443 : 80);
 // 是否默认抓包
-export const CAPUTRE_ALL_REQUEST = args.catch === "all";
+export const CAPUTRE_ALL_REQUEST = args.capture === "all";
