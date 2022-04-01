@@ -1,4 +1,5 @@
 import Router from "@koa/router";
+import { CAPUTRE_ALL_REQUEST } from "./config.js";
 import { mapResponse, disableLog, redirect } from "./utils.js";
 
 export const router = new Router();
@@ -7,16 +8,18 @@ export const router = new Router();
 
 // Example
 // 1. disable some api log 
-router.get('/', disableLog())
+// router.get('/', disableLog())
+// 
 // 2. change response body
-router.get( "/users/:name", mapResponse((res, ctx) => {
-    // const { params, query } = ctx;
-    return {
-      ...res,
-      login: `Inject: ${res.login}`
-    };
-  })
-);
+// https://api.github.com/users/tbxark
+// router.get( "/users/:name", mapResponse((res, ctx) => {
+//     // const { params, query } = ctx;
+//     return {
+//       ...res,
+//       login: `Inject: ${res.login}`
+//     };
+//   })
+// );
 
 
 
@@ -28,4 +31,8 @@ router.get( "/users/:name", mapResponse((res, ctx) => {
 // Final
 // --------------------------------
 // change `mapResponse` to `disableLog` or `redirect` to disable others api log
-router.all("(.*)", redirect());
+if (CAPUTRE_ALL_REQUEST) {
+  router.get("(.*)", mapResponse());
+} else {
+  router.all("(.*)", redirect());
+}
