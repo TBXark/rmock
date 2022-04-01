@@ -18,6 +18,6 @@ export const TARGET_HOST = target?.hostname || "api.github.com";
 // 是否为HTTPS
 export const TARGET_IS_HTTPS = target?.protocol ? target.protocol.startsWith("https") : true;
 // 目标端口
-export const TARGET_PORT = target.port || (TARGET_IS_HTTPS ? 443 : 80);
+export const TARGET_PORT = target?.port || (TARGET_IS_HTTPS ? 443 : 80);
 // 是否默认抓包
 export const CAPUTRE_ALL_REQUEST = args.capture === "all";

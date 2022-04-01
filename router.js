@@ -32,7 +32,7 @@ export const router = new Router();
 // --------------------------------
 // change `mapResponse` to `disableLog` or `redirect` to disable others api log
 if (CAPUTRE_ALL_REQUEST) {
-  router.get("(.*)", mapResponse());
+  router.all("(.*)", mapResponse());
 } else {
   router.all("(.*)", redirect());
 }
