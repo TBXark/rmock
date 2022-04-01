@@ -13,25 +13,29 @@ import http from "http";
 import https from "https";
 
 const httpAgent = new http.Agent({ keepAlive: true });
-const httpsAgent = new https.Agent({ keepAlive: true});
+const httpsAgent = new https.Agent({ keepAlive: true });
 
-
-export function disableLog() {
-  return mapResponse(null, { canLog: false });
-}
+const defaultMapBodyConfig = {
+  canLog: true,
+  showRequestHeader: SHOW_REQUEST_HEADER,
+  showRequestBody: SHOW_REQUEST_BODY,
+  showResponseBody: SHOW_RESPONSE_BODY,
+  printResponseJsonPretty: PRINT_RESPONSE_JSON_PRETTY,
+  requestBuilder: defaultRequestBuilder,
+};
 
 export function defaultRequestBuilder(ctx) {
-
   const url = ctx.request.URL;
   url.host = TARGET_HOST;
   url.protocol = TARGET_IS_HTTPS ? "https" : "http";
   url.port = TARGET_PORT;
 
-  const body = ctx.request.method === "GET" ? null : JSON.stringify(ctx.request.body);
+  const body =
+    ctx.request.method === "GET" ? null : JSON.stringify(ctx.request.body);
   const headers = {
     ...ctx.request.headers,
     host: TARGET_HOST,
-  }
+  };
 
   return {
     url,
@@ -40,25 +44,19 @@ export function defaultRequestBuilder(ctx) {
       headers,
       body,
       agent: TARGET_IS_HTTPS ? httpsAgent : httpAgent,
-    }
+    },
   };
 }
 
 export function customRequestBuilder(mapRequest) {
-    return (ctx) => {
-      return mapRequest(defaultMapBodyConfig(ctx))
-    }
+  return (ctx) => {
+    return mapRequest(defaultMapBodyConfig(ctx));
+  };
 }
 
-
-const defaultMapBodyConfig = {
-  canLog: true,
-  showRequestHeader: SHOW_REQUEST_HEADER,
-  showRequestBody: SHOW_REQUEST_BODY,
-  showResponseBody: SHOW_RESPONSE_BODY,
-  printResponseJsonPretty: PRINT_RESPONSE_JSON_PRETTY,
-  requestBuilder: defaultRequestBuilder
-};
+export function disableLog() {
+  return mapResponse(null, { canLog: false });
+}
 
 export function redirect(config) {
   const { host, protocol, port } = config || {};
@@ -67,12 +65,10 @@ export function redirect(config) {
     url.host = host || TARGET_HOST;
     url.protocol = protocol || (TARGET_IS_HTTPS ? "https" : "http");
     url.port = port || (url.protocol.startsWith("https") ? 443 : 80);
-    console.log(`\x1B[${statusToColor(302)}m${ctx.request.method} [${302} ${"Redirect"}]\x1B[0m : \x1B[1m${url.href}\x1B[0m\n`)
+    console.log(requestSummary(302, ctx.request.method, "Redirect", url.href));
     ctx.redirect(url);
-  }
+  };
 }
-
-
 
 export function mapResponse(map, config) {
   return async (ctx) => {
@@ -82,7 +78,7 @@ export function mapResponse(map, config) {
       showRequestBody,
       showResponseBody,
       printResponseJsonPretty,
-      requestBuilder
+      requestBuilder,
     } = {
       ...defaultMapBodyConfig,
       ...config,
@@ -102,7 +98,7 @@ export function mapResponse(map, config) {
 
     const log = canLog
       ? {
-          status:  res.status,
+          status: res.status,
           statusText: res.statusText,
           method: req.config.method,
           url: req.url.href,
@@ -119,6 +115,15 @@ export function mapResponse(map, config) {
     }
     if (canLog) {
       logRequest(log);
+    } else {
+      console.log(
+        requestSummary(
+          res.status,
+          req.config.method,
+          res.statusText,
+          req.url.href
+        )
+      );
     }
     ctx.status = res.status;
     ctx.statusText = res.statusText;
@@ -138,8 +143,14 @@ function statusToColor(status) {
   }
 }
 
+function requestSummary(status, method, statusText, url) {
+  return `\x1B[${statusToColor(status)}m${method} [${status} ${statusText}]\x1B[0m : \x1B[1m${url}\x1B[0m\n`;
+}
+
 function logRequest(log) {
-  console.group(`\x1B[${statusToColor(log.status)}m${log.method} [${log.status} ${log.statusText}]\x1B[0m : \x1B[1m${log.url}\x1B[0m`);
+  console.group(
+    requestSummary(log.status, log.method, log.statusText, log.url)
+  );
   if (log.header) {
     console.log("\n--Request Header---------------------------\n");
     console.log(JSON.stringify(log.header, null, 2));
@@ -159,4 +170,3 @@ function logRequest(log) {
   console.log("\n--End--------------------------------------\n\n");
   console.groupEnd();
 }
-
