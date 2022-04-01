@@ -1,7 +1,7 @@
 // 打印请求头
 export const SHOW_REQUEST_HEADER = false;
 // 打印请求体
-export const SHOW_REQUEST_BODY = false;
+export const SHOW_REQUEST_BODY = true;
 // 答应响应体
 export const SHOW_RESPONSE_BODY = true;
 // 响应体JSON格式化输出

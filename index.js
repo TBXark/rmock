@@ -7,4 +7,4 @@ import ip from "ip"
 const app = new Koa();
 app.use(errorHandler()).use(csrf()).use(bodyParser()).use(router.routes()).use(router.allowedMethods());
 app.listen(3000, "0.0.0.0");
-console.log(`\nServer: http://${ip.address()}:3000`)
+console.log(`\nServer: http://${ip.address()}:3000\n\n\n\n`)

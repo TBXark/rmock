@@ -10,8 +10,7 @@ export const router = new Router();
 router.get('/', disableLog())
 // 2. change response body
 router.get( "/users/:name", mapBody((res, ctx) => {
-    const { params, query } = ctx;
-    console.log(params);
+    // const { params, query } = ctx;
     return {
       ...res,
       login: `Inject: ${res.login}`
@@ -28,4 +27,5 @@ router.get( "/users/:name", mapBody((res, ctx) => {
 
 // Final
 // --------------------------------
+// change `mapBody` to `disableLog` to disable others api log
 router.all("(.*)", mapBody());
