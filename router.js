@@ -1,5 +1,5 @@
 import Router from "@koa/router";
-import { mapBody, disableLog } from "./utils.js";
+import { mapResponse, disableLog } from "./utils.js";
 
 export const router = new Router();
 
@@ -9,7 +9,7 @@ export const router = new Router();
 // 1. disable some api log 
 router.get('/', disableLog())
 // 2. change response body
-router.get( "/users/:name", mapBody((res, ctx) => {
+router.get( "/users/:name", mapResponse((res, ctx) => {
     // const { params, query } = ctx;
     return {
       ...res,
@@ -28,4 +28,4 @@ router.get( "/users/:name", mapBody((res, ctx) => {
 // Final
 // --------------------------------
 // change `mapBody` to `disableLog` to disable others api log
-router.all("(.*)", mapBody());
+router.all("(.*)", mapResponse());

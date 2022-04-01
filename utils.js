@@ -15,19 +15,53 @@ import https from "https";
 const httpAgent = new http.Agent({ keepAlive: true });
 const httpsAgent = new https.Agent({ keepAlive: true});
 
+
+export function disableLog() {
+  return mapResponse(null, { canLog: false });
+}
+
+export function defaultRequestBuilder(ctx) {
+
+  const url = ctx.request.URL;
+  url.host = TARGET_HOST;
+  url.protocol = TARGET_IS_HTTPS ? "https" : "http";
+  url.port = TARGET_PORT;
+
+  const body = ctx.request.method === "GET" ? null : JSON.stringify(ctx.request.body);
+  const headers = {
+    ...ctx.request.headers,
+    host: TARGET_HOST,
+  }
+
+  return {
+    url,
+    config: {
+      method: ctx.request.method,
+      headers,
+      body,
+      agent: TARGET_IS_HTTPS ? httpsAgent : httpAgent,
+    }
+  };
+}
+
+export function customRequestBuilder(mapRequest) {
+    return (ctx) => {
+      return mapRequest(defaultMapBodyConfig(ctx))
+    }
+}
+
+
 const defaultMapBodyConfig = {
   canLog: true,
   showRequestHeader: SHOW_REQUEST_HEADER,
   showRequestBody: SHOW_REQUEST_BODY,
   showResponseBody: SHOW_RESPONSE_BODY,
   printResponseJsonPretty: PRINT_RESPONSE_JSON_PRETTY,
+  requestBuilder: defaultRequestBuilder
 };
 
-export function disableLog() {
-  return mapBody(null, { canLog: false });
-}
 
-export function mapBody(map, config) {
+export function mapResponse(map, config) {
   return async (ctx) => {
     const {
       canLog,
@@ -35,6 +69,7 @@ export function mapBody(map, config) {
       showRequestBody,
       showResponseBody,
       printResponseJsonPretty,
+      requestBuilder
     } = {
       ...defaultMapBodyConfig,
       ...config,
@@ -48,23 +83,8 @@ export function mapBody(map, config) {
       }
     };
 
-    const url = ctx.request.URL;
-    url.host = TARGET_HOST;
-    url.protocol = TARGET_IS_HTTPS ? "https" : "http";
-    url.port = TARGET_PORT;
-
-    const body = ctx.request.method === "GET" ? null : JSON.stringify(ctx.request.body);
-    const headers = {
-      ...ctx.request.headers,
-      host: TARGET_HOST,
-    }
-
-    let res = await fetch(url, {
-      method: ctx.request.method,
-      headers,
-      body,
-      agent: TARGET_IS_HTTPS ? httpsAgent : httpAgent,
-    });
+    const req = requestBuilder(ctx);
+    const res = await fetch(req.url, req.config);
     let resBody = await res.json();
 
     let log = canLog
@@ -72,9 +92,9 @@ export function mapBody(map, config) {
           status:  res.status,
           statusText: res.statusText,
           method: ctx.request.method,
-          url: url.href,
-          header: showRequestHeader ? headers : null,
-          body: showRequestBody ? body : null,
+          url: req.url.href,
+          header: showRequestHeader ? req.headers : null,
+          body: showRequestBody ? req.body : null,
           response: showResponseBody ? responseStringify(resBody) : null,
         }
       : {};
