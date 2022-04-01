@@ -8,3 +8,7 @@ export const SHOW_RESPONSE_BODY = true;
 export const PRINT_RESPONSE_JSON_PRETTY = false;
 // 目标域名
 export const TARGET_HOST = "api.github.com";
+// 是否为HTTPS
+export const TARGET_IS_HTTPS = true;
+// 目标端口
+export const TARGET_PORT = TARGET_IS_HTTPS ? 443 : 80;

@@ -4,14 +4,16 @@ import {
   SHOW_REQUEST_BODY,
   SHOW_RESPONSE_BODY,
   TARGET_HOST,
+  TARGET_IS_HTTPS,
+  TARGET_PORT,
   PRINT_RESPONSE_JSON_PRETTY,
 } from "./config.js";
 
+import http from "http";
 import https from "https";
 
-const httpsAgent = new https.Agent({
-  keepAlive: true,
-});
+const httpAgent = new http.Agent({ keepAlive: true });
+const httpsAgent = new https.Agent({ keepAlive: true});
 
 const defaultMapBodyConfig = {
   canLog: true,
@@ -48,22 +50,20 @@ export function mapBody(map, config) {
 
     const url = ctx.request.URL;
     url.host = TARGET_HOST;
-    url.protocol = "https";
-    url.port = 443;
+    url.protocol = TARGET_IS_HTTPS ? "https" : "http";
+    url.port = TARGET_PORT;
 
-    const body =
-      ctx.request.method === "POST" && ctx.request.body
-        ? JSON.stringify(ctx.request.body)
-        : null;
+    const body = ctx.request.method === "GET" ? null : JSON.stringify(ctx.request.body);
+    const headers = {
+      ...ctx.request.headers,
+      host: TARGET_HOST,
+    }
 
     let res = await fetch(url, {
       method: ctx.request.method,
-      headers: {
-        ...ctx.request.headers,
-        host: url.host,
-      },
+      headers,
       body,
-      agent: httpsAgent,
+      agent: TARGET_IS_HTTPS ? httpsAgent : httpAgent,
     });
     let resBody = await res.json();
 
@@ -73,9 +73,7 @@ export function mapBody(map, config) {
           statusText: res.statusText,
           method: ctx.request.method,
           url: url.href,
-          header: showRequestHeader
-            ? JSON.stringify(ctx.request.headers, null, 2)
-            : null,
+          header: showRequestHeader ? headers : null,
           body: showRequestBody ? body : null,
           response: showResponseBody ? responseStringify(resBody) : null,
         }
@@ -111,7 +109,7 @@ function logRequest(log) {
   console.group(`\x1B[${statusToColor(log.status)}m${log.method} [${log.status} ${log.statusText}]\x1B[0m : \x1B[1m${log.url}\x1B[0m`);
   if (log.header) {
     console.log("\n--Request Header--------------------------\n");
-    console.log(log.header);
+    console.log(JSON.stringify(log.header, null, 2));
   }
   if (log.body) {
     console.log("\n--Request Body----------------------------\n");
