@@ -60,6 +60,19 @@ const defaultMapBodyConfig = {
   requestBuilder: defaultRequestBuilder
 };
 
+export function redirect(config) {
+  const { host, protocol, port } = config || {};
+  return (ctx) => {
+    const url = ctx.request.URL;
+    url.host = host || TARGET_HOST;
+    url.protocol = protocol || (TARGET_IS_HTTPS ? "https" : "http");
+    url.port = port || (url.protocol.startsWith("https") ? 443 : 80);
+    console.log(`\x1B[${statusToColor(302)}m${ctx.request.method} [${302} ${"Redirect"}]\x1B[0m : \x1B[1m${url.href}\x1B[0m\n`)
+    ctx.redirect(url);
+  }
+}
+
+
 
 export function mapResponse(map, config) {
   return async (ctx) => {
@@ -87,11 +100,11 @@ export function mapResponse(map, config) {
     const res = await fetch(req.url, req.config);
     let resBody = await res.json();
 
-    let log = canLog
+    const log = canLog
       ? {
           status:  res.status,
           statusText: res.statusText,
-          method: ctx.request.method,
+          method: req.config.method,
           url: req.url.href,
           header: showRequestHeader ? req.headers : null,
           body: showRequestBody ? req.body : null,
@@ -128,11 +141,11 @@ function statusToColor(status) {
 function logRequest(log) {
   console.group(`\x1B[${statusToColor(log.status)}m${log.method} [${log.status} ${log.statusText}]\x1B[0m : \x1B[1m${log.url}\x1B[0m`);
   if (log.header) {
-    console.log("\n--Request Header--------------------------\n");
+    console.log("\n--Request Header---------------------------\n");
     console.log(JSON.stringify(log.header, null, 2));
   }
   if (log.body) {
-    console.log("\n--Request Body----------------------------\n");
+    console.log("\n--Request Body-----------------------------\n");
     console.log(log.body);
   }
   if (log.response) {
