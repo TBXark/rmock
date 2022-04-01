@@ -7,7 +7,7 @@ Modify the http json response, no need for http capture and MitM.
 Start server:
 
 ```shell
-yarn run dev --target=https://example.com --catch=all --port=8080
+yarn run dev --target=https://example.com --capture=all --port=8080
 ```
 
 
