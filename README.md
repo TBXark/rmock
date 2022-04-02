@@ -46,4 +46,3 @@ function register(router, utils) {
 ```shell
 rmock -p 3000 -t https://api.github.com -c all -r example.js
 ```
-```
