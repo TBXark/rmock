@@ -25,3 +25,25 @@ Options:
   -pj, --prettyJson           print response json pretty (default: false)
   --help                      read more information
 ```
+
+
+### Example
+
+```js
+// example.js
+function register(router, utils) {
+    const { mapResponse, disableLog, redirect } = utils;
+    router.get('/status', mapResponse((res, ctx) => {
+      return {
+        ...res,
+        inject: 'Hello World???'
+      };
+    }))
+}
+```
+
+
+```shell
+rmock -p 3000 -t https://api.github.com -c all -r example.js
+```
+```
