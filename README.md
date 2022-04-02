@@ -31,6 +31,8 @@ Options:
 
 ```js
 // example.js
+// sandbox: fs, fetch, path, log 
+//
 function register(router, utils) {
     const { mapJSON, customMapper, redirect } = utils;
     
@@ -42,6 +44,16 @@ function register(router, utils) {
       return {
         ...res,
         inject: 'Hello World???'
+      };
+    }))
+
+    // 3. async mapper
+    router.get('/users/:id', mapJSON(async (res, ctx) => {
+      const { id } = ctx.params;
+      const repos = await fetch(`https://api.github.com/users/${id}/repos`).then(res => res.json());
+      return {
+        ...res,
+        repos
       };
     }))
 }
