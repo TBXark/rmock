@@ -32,8 +32,8 @@ Options:
 ```js
 // example.js
 function register(router, utils) {
-    const { mapResponse, disableLog, redirect } = utils;
-    router.get('/status', mapResponse((res, ctx) => {
+    const { mapJSON, mapResponse, redirect } = utils;
+    router.get('/status', mapJSON((res, ctx) => {
       return {
         ...res,
         inject: 'Hello World???'
