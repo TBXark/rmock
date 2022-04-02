@@ -2,7 +2,7 @@
   "name": "rmock",
   "version": "1.0.0",
   "description": "Modify the http json response, no need for http capture and MitM.",
-  "main": "lib/rmock.js",
+  "main": "bin/rmock.js",
   "bin": {
     "rmock": "bin/rmock.js"
   },
