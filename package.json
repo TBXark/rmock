@@ -1,20 +1,29 @@
 {
-  "name": "response-mapper",
+  "name": "rmock",
   "version": "1.0.0",
   "description": "Modify the http json response, no need for http capture and MitM.",
-  "main": "index.js",
-  "type": "module",
-  "scripts": {
-    "dev": "nodemon --experimental-modules index.js"
+  "main": "lib/rmock.js",
+  "bin": {
+    "rmock": "bin/rmock.js"
   },
+  "scripts": {
+    "start": "node ./bin/rmock.js",
+    "dev": "nodemon ./bin/rmock.js"
+  },
+  "files": [
+    "lib",
+    "*.cjs",
+    "*.mjs",
+    "*.js"
+  ],
   "author": "TBXark",
   "license": "MIT",
   "dependencies": {
     "@koa/router": "^10.1.1",
+    "commander": "^9.1.0",
     "ip": "^1.1.5",
     "koa": "^2.13.4",
     "koa-bodyparser": "^4.3.0",
-    "minimist": "^1.2.6",
     "node-fetch": "^3.2.3"
   },
   "devDependencies": {
