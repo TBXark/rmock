@@ -35,7 +35,7 @@ function register(router, utils) {
     const { mapJSON, customMapper, redirect } = utils;
     
     // 1. disable some api log
-    // router.get('/', mapJSON(null, { canLog: false }))
+    router.get('/', mapJSON(null, { canLog: false }))
     
     // 2. change response body
     router.get('/status', mapJSON((res, ctx) => {
