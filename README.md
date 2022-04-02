@@ -32,7 +32,7 @@ Options:
 ```js
 // example.js
 function register(router, utils) {
-    const { mapJSON, mapResponse, redirect } = utils;
+    const { mapJSON, customMapper, redirect } = utils;
     router.get('/status', mapJSON((res, ctx) => {
       return {
         ...res,
