@@ -10,12 +10,6 @@
     "start": "node ./bin/rmock.js",
     "dev": "nodemon ./bin/rmock.js"
   },
-  "files": [
-    "lib",
-    "*.cjs",
-    "*.mjs",
-    "*.js"
-  ],
   "author": "TBXark",
   "license": "MIT",
   "dependencies": {
