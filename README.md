@@ -2,6 +2,12 @@
 
 Modify the http json response, no need for http capture and MitM, and solutions of cross domain problems.
 
+### Install
+
+```shell
+npm install -g https://github.com/TBXark/rmock.git
+```
+
 ### Usage
 
 ```
