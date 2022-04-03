@@ -23,6 +23,7 @@ Options:
   -rb, --requestBody          show request body (default: true)
   -res, --responseBody        show response body (default: true)
   -pj, --prettyJson           print response json pretty (default: false)
+  -i, --importer              import external code mode: vm,esm,cjs
   --help                      read more information
 ```
 
@@ -57,6 +58,11 @@ function register(router, utils) {
       };
     }))
 }
+
+// add in esm mode
+module.register = register;
+// add in cjs mode
+exports.register = register;
 ```
 
 
