@@ -11,6 +11,13 @@
     "dev": "nodemon ./bin/rmock.js",
     "lint": "eslint --fix --ext .js,.jsx,.mjs ."
   },
+  "files": [
+    "bin",
+    "lib",
+    "package.json",
+    "README.md",
+    "LICENSE"
+  ],
   "author": "TBXark",
   "license": "MIT",
   "dependencies": {
