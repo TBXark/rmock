@@ -1,7 +1,7 @@
 // Import core modules using require
 //
-const os = require('os');
-console.log(os.arch());
+// const os = require('os');
+// console.log(os.arch());
 
 async function register(router, utils, importModule) {
   // Commonly used functions are injected by default
@@ -13,6 +13,10 @@ async function register(router, utils, importModule) {
   //
   // get default export manually
   const {default: fetch} = await importModule('node-fetch');
+  
+  // import internal modules
+  // const log = await importModule('./log.mjs');
+
 
   // Example
   //
@@ -33,7 +37,6 @@ async function register(router, utils, importModule) {
   router.get('/users/:id', mapJSON(async (res, ctx) => {
     const {id} = ctx.params;
     const repos = await fetch(`https://api.github.com/users/${id}/repos`).then((res) => res.json());
-    console.log(repos);
     return {
       ...res,
       repos,
