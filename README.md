@@ -16,7 +16,7 @@ Usage: rmock [options]
 Options:
   -p, --port <port>           port (default: 3000)
   -t, --target <url>          target url (default: "https://api.github.com")
-  -tp, --targetPort <number>  target port
+  -tp, --targetPort <port>    target port
   -c, --capture <all|none>    capture all request or none (default: "all")
   -r, --router <path>         external router file (default: null)
   -rh, --requestHeader        show request header (default: false)
