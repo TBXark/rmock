@@ -1,6 +1,6 @@
 {
   "name": "rmock",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Modify the http json response, no need for http capture and MitM.",
   "main": "bin/rmock.js",
   "bin": {
@@ -9,6 +9,7 @@
   "scripts": {
     "start": "node ./bin/rmock.js",
     "dev": "nodemon ./bin/rmock.js",
+    "test": "node ./bin/rmock.js -r example.js",
     "lint": "eslint --fix --ext .js,.jsx,.mjs ."
   },
   "files": [
