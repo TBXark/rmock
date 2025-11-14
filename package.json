@@ -1,37 +1,53 @@
 {
-  "name": "rmock",
-  "version": "1.0.1",
-  "description": "Modify the http json response, no need for http capture and MitM.",
-  "main": "bin/rmock.js",
+  "author": "TBXark",
   "bin": {
     "rmock": "bin/rmock.js"
   },
-  "scripts": {
-    "start": "node ./bin/rmock.js",
-    "dev": "nodemon ./bin/rmock.js",
-    "test": "node ./bin/rmock.js -r example.js",
-    "lint": "eslint --fix --ext .js,.jsx,.mjs ."
+  "dependencies": {
+    "@koa/router": "^14.0.0",
+    "chokidar": "^4.0.1",
+    "commander": "^14.0.2",
+    "ip": "^2.0.1",
+    "koa": "^3.1.1",
+    "koa-bodyparser": "^4.4.1",
+    "picocolors": "^1.0.0",
+    "undici": "^7.16.0"
+  },
+  "description": "Modify HTTP JSON responses without MitM or browser plugins.",
+  "devDependencies": {
+    "@antfu/eslint-config": "^6.2.0",
+    "@types/ip": "^1.1.2",
+    "@types/koa": "^3.0.1",
+    "@types/koa-bodyparser": "^4.3.12",
+    "@types/koa__router": "^12.0.4",
+    "@types/node": "^24.10.1",
+    "eslint": "^9.2.0",
+    "tsx": "^4.9.3",
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^8.46.4"
+  },
+  "engines": {
+    "node": ">=18.17"
   },
   "files": [
-    "bin",
-    "lib",
-    "package.json",
+    "LICENSE",
     "README.md",
-    "LICENSE"
+    "bin",
+    "dist"
   ],
-  "author": "TBXark",
   "license": "MIT",
-  "dependencies": {
-    "@koa/router": "^10.1.1",
-    "commander": "^9.1.0",
-    "ip": "^2.0.1",
-    "koa": "^3.0.1",
-    "koa-bodyparser": "^4.3.0",
-    "node-fetch": "^3.2.3"
+  "main": "dist/bin/rmock.js",
+  "name": "rmock",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "rm -rf dist",
+    "dev": "tsx watch src/bin/rmock.ts --router example.js",
+    "lint": "eslint .",
+    "prepare": "npm run build",
+    "prestart": "npm run build",
+    "start": "node ./dist/bin/rmock.js",
+    "test": "npm run build && node ./dist/bin/rmock.js --router example.js --capture none"
   },
-  "devDependencies": {
-    "eslint": "^8.12.0",
-    "eslint-config-google": "^0.14.0",
-    "nodemon": "^2.0.15"
-  }
+  "type": "module",
+  "version": "2.0.0"
 }
